@@ -1,0 +1,35 @@
+Aninda Manocha (am548)
+
+Game: Project Plan
+CompSci 308
+September 2, 2016
+
+Cracking the Couponator:
+
+You are a college student with little money, but you need to buy yourself food to fuel your brain. So 
+naturally, when you receive a coupon with a $100 value for meals at your favorite restaurant, you are 
+ecstatic. You quickly run to the restaurant to buy yourself a delicious dinner. You are at the register
+about to pay for your food, when you learn that in order to redeem the coupon, you have to enter a series
+of codes into the restaurant's machine, the Couponator. You must know and spell out these codes in order 
+to receive your $100 worth of food (that isn't necessarily all being spent on dinner in one night).
+
+This game falls under the genre Top Down Scrolling Shooter. In a level, the user is given a series of 
+codes (words) to spell out. In order to spell out these words, the user controls a coupon printer that 
+shoots out coupons while letters fall down the screen (similar to a gun shooting out bullets). The user 
+controls the coupon printer by moving it left and right using the left and right arrow keys. By moving 
+the printer, the user can aim at letters (which will be falling from different places along the top of 
+the screen) and avoid unwanted letters. The user wants to hit the letters that are in the given code as 
+random letters will fall down the screen (some of which are in the given code and some of which are not), 
+so the user should focus only on certain letters (the code will contain distinct letters). If the user
+hits a letter that is not in the given code, then the user loses a life. The user is given three lives 
+and if the user loses all three lives, the user loses the game. In order to win the game, the user must 
+complete two levels. 
+
+In the first level, the user does not have to hit the letters in the order that they appear in the code, 
+but in the second level the user does have to hit the correct letters in order to properly spell out the 
+code. As the user is spelling out a given code in the second level, if the user hits a letter that is not
+the next one in the code, regardless of whether or not that letter appears elsewhere in the code, the 
+user loses a life. Each time the user completely spells out a code, another code will appear until the
+user has spelled out all of the codes in a level. The user must spell out a certain number of codes (5) 
+in order to complete a level. The ultimate goal is to crack the Couponator by spelling out all of the 
+codes in the two levels.
