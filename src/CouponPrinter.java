@@ -47,4 +47,8 @@ public class CouponPrinter {
 	public int getYPosition() {
 		return y_position;
 	}
+	
+	public ImageView getCouponPrinter() {
+		return coupon_printer;
+	}
 }

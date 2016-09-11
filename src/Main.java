@@ -37,6 +37,7 @@ public class Main extends Application {
 		CouponPrinter coupon_printer = createCouponPrinter(root, scene);
 		
 		new_game = new Game(root, scene, coupon_printer, animation);
+		new_game.init();
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
                 					   e -> new_game.play());
 		

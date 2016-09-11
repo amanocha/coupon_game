@@ -27,6 +27,4 @@ public class Food {
 	public void setAnswer(String new_answer) {
 		answer = new_answer;
 	}
-	
-	
 }

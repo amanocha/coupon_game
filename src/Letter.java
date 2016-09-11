@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
-
 import java.util.Iterator;
 
 public class Letter {
@@ -22,7 +21,7 @@ public class Letter {
 	public static final int HEIGHT = 34;
 	
 	private static final int LETTER_SPEED = 60;
-	private static final int TEXT_WIDTH = 15;
+	private static final int LETTER_WIDTH = 15;
 	
 	private Game game;
 	private Group root;
@@ -60,9 +59,11 @@ public class Letter {
 		}
 		if (isHit()) {
 			if (current_food.contains(Character.toString(value))) {
-				display();
+				game.addLetter(this);
+			} else {
+				game.updateLives();
+				System.out.print(value);
 			}
-			//game.updateLives();
 		}
 	}
 	
@@ -84,6 +85,7 @@ public class Letter {
 	
 	public void disappear() {
 		letter.setY(Main.SCREEN_HEIGHT);
+		game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(letter));
 	}
 	
 	public void display() {
@@ -97,7 +99,7 @@ public class Letter {
 	public int calculateX(char current_letter) {
 		int food_length = current_food.length();
 		int position = current_food.indexOf(current_letter);
-		return Main.SCREEN_WIDTH-(food_length+1)*TEXT_WIDTH + position*TEXT_WIDTH;
+		return Main.SCREEN_WIDTH-(food_length+1)*LETTER_WIDTH + position*LETTER_WIDTH;
 	}
 	
 	public char getValue() {
