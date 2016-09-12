@@ -463,6 +463,7 @@ public class Game {
 				}
 			}
 			frame++;
+			System.out.println(frame);
 		}
 	}
 	

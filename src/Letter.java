@@ -15,7 +15,6 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -103,10 +102,8 @@ public class Letter {
 	 * @return true if the letter collided with the coupon printer or a coupon and false if otherwise 
 	 */
 	public boolean isHit() {
-		ObservableList<Node> coupons = root.getChildren();
-		//Iterator<Node> iter = coupons.iterator();
-		for (int i = 0; i < coupons.size(); i++) {
-			Node coupon = coupons.get(i);
+		for (int i = 0; i < root.getChildren().size(); i++) {
+			Node coupon = root.getChildren().get(i);
 			if ((coupon instanceof Rectangle) && letter.intersects(coupon.getBoundsInLocal())) { // the letter hit something (either coupon, printer, or screen)
 				if (coupon.equals(game.getCouponPrinterBoundary())) { // the letter hit the printer's boundary
 					disappear();
