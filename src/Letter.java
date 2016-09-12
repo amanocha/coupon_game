@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import java.util.Iterator;
 
 public class Letter {
 	public static final int WIDTH = 33;
@@ -63,7 +62,7 @@ public class Letter {
 	 * @return the ImageView object containing the image of the letter, which is displayed
 	 */
 	public ImageView drawLetter() {
-		letter.setImage(new Image(image_name));
+		letter.setImage(new Image(getClass().getClassLoader().getResourceAsStream(image_name)));
 		letter.setX(x_position);
 		letter.setY(y_position);
 		return letter;
@@ -105,9 +104,9 @@ public class Letter {
 	 */
 	public boolean isHit() {
 		ObservableList<Node> coupons = root.getChildren();
-		Iterator<Node> iter = coupons.iterator();
-		while (iter.hasNext()) {
-			Node coupon = iter.next();
+		//Iterator<Node> iter = coupons.iterator();
+		for (int i = 0; i < coupons.size(); i++) {
+			Node coupon = coupons.get(i);
 			if ((coupon instanceof Rectangle) && letter.intersects(coupon.getBoundsInLocal())) { // the letter hit something (either coupon, printer, or screen)
 				if (coupon.equals(game.getCouponPrinterBoundary())) { // the letter hit the printer's boundary
 					disappear();

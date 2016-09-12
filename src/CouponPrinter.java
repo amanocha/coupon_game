@@ -55,7 +55,7 @@ public class CouponPrinter {
 	 * @return the ImageView object containing the image of the coupon printer, which is displayed
 	 */
 	public ImageView drawCouponPrinter() {
-		coupon_printer.setImage(new Image("printer.png"));
+		coupon_printer.setImage(new Image(getClass().getClassLoader().getResourceAsStream("printer.png")));
 		coupon_printer.setX(x_position);
 		coupon_printer.setY(y_position);
 		return coupon_printer;

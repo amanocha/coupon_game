@@ -12,7 +12,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -24,7 +23,6 @@ import javafx.scene.text.*;
 import javafx.util.Duration;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Game {
 	public static final int BUTTON_WIDTH = 200;
@@ -101,9 +99,7 @@ public class Game {
 	 * question about food. The level is also set.
 	 */
 	public void init() {
-		createCouponPrinter();
 		addFoods();
-		displayLives();
 		newLevel();
 		createSplashScreen();
 	}
@@ -229,10 +225,8 @@ public class Game {
 	public void newFood(String food) {
 		root.getChildren().remove(food_text); // to avoid overlapping text
 		
-		// cover the previously displayed answer
-		Rectangle cover = new Rectangle(COVER_X, COVER_Y, COVER_WIDTH, COVER_HEIGHT);
-		cover.setFill(Color.BLACK);
-		root.getChildren().add(cover);
+		createCouponPrinter();
+		displayLives();
 		
 		Random random_generator = new Random();
 		while (food.equals(current_food.getAnswer())) {
@@ -364,6 +358,7 @@ public class Game {
 			if (letters.size() == 0) { // no more letters left to hit in the answer, new food
 				num_foods++;
 				food_index = 0;
+				root.getChildren().clear();
 				newFood(current_food.getAnswer());
 			}
 		}
@@ -411,9 +406,8 @@ public class Game {
 		
 		ArrayList<ImageView> remove_letters = new ArrayList<ImageView>();
 		if (level > 1) {
-			Iterator<Node> iter = root.getChildren().iterator();
-			while (iter.hasNext()) {
-				Object current_letter = iter.next();
+			for(int i = 0; i < root.getChildren().size(); i++) {
+				Object current_letter = root.getChildren().get(i);
 				if (current_letter instanceof ImageView && !(current_letter.equals(coupon_printer.getCouponPrinter()))) {
 					remove_letters.add((ImageView)current_letter);
 				}
