@@ -1,5 +1,9 @@
 /**
- * This is the letter object, which creates an object for any of the 26 letters of the alphabet.
+ * The class of the Letter object. It stores all of the information pertaining to a letter, which can 
+ * have a value of any of the 26 letters of the alphabet. It allows letters to be displayed and also
+ * contains the methods that dictate how letters move and react when they come into contact with other
+ * objects. The Game object creates Letter objects at random x positions at the top of the screen,
+ * and then they slowly fall down the screen for the user to shoot coupons at.
  * 
  * @author Aninda Manocha
  */
@@ -21,73 +25,119 @@ public class Letter {
 	public static final int HEIGHT = 34;
 	
 	private static final int LETTER_SPEED = 60;
-	private static final int LETTER_WIDTH = 15;
+	private static final int LETTER_WIDTH = 16; // for displaying the shot letters
 	
 	private Game game;
 	private Group root;
 	private char value;
 	private String image_name;
-	private Image image;
 	private ImageView letter;
 	private int x_position;
 	private int y_position;
 	private String current_food;
 	
-	public Letter(Game new_game, Group new_root, char letter_value, int x, int y) {
+	/*****CONSTRUCTORS*****/
+	
+	/**
+	 * This constructor creates a Letter object, which will interact with the Game object and be 
+	 * placed at a certain position. The letter is specified.
+	 * @param new_game - the Game object which interacts with the Letter object
+	 * @param letter_value - the lowercase letter of the alphabet to be displayed (in uppercase)
+	 * @param x - the x coordinate of the top left corner of the Letter
+	 * @param y - the y coordinate of the top left corner of the Letter
+	 */
+	public Letter(Game new_game, char letter_value, int x, int y) {
 		game = new_game;
-		root = new_root;
+		root = new_game.getRoot();
 		value = letter_value;
 		image_name = Character.toString(value) + ".png";
-		image = new Image(image_name);
 		letter = new ImageView();
 		x_position = x;
 		y_position = y;
 		current_food = new_game.getCurrentFood().getAnswer();
 	}
 
+	/**
+	 * Sets the ImageView object so that it can display the Letter on the screen. The x and y 
+	 * coordinates of the ImageView object are also set, so that the Letter is positioned.
+	 * @return the ImageView object containing the image of the letter, which is displayed
+	 */
 	public ImageView drawLetter() {
-		letter.setImage(image);
+		letter.setImage(new Image(image_name));
 		letter.setX(x_position);
 		letter.setY(y_position);
 		return letter;
 	}
 	
+	/**
+	 * Moves the letter downwards slowly to simulate falling. It disappears if it reaches the bottom
+	 * of the screen or if it hits either the coupon printer or a coupon. When it collides with either 
+	 * the coupon or coupon printer, it interacts with the Game object in order to either decrement 
+	 * the number of lives (if the letter is not in the answer, or if the letter is not the next one 
+	 * in the answer in level 2). 
+	 * @param time_step - the elapsed time between each frame, which is multiplied by the velocity
+	 */
 	public void fall(double time_step) {
 		letter.setY(letter.getY() + LETTER_SPEED*time_step);
-		if (letter.getY() >= 700) {
+		if (letter.getY() >= 850) {
 			disappear();
 		}
 		if (isHit()) {
 			if (current_food.contains(Character.toString(value))) {
-				game.addLetter(this);
+				if (game.getLevel() == 1) {
+					game.addLetter(this);
+				} else {
+					if (value == current_food.charAt(game.getFoodIndex())) {
+						game.addLetter(this);
+					} else {
+						game.updateLives();
+					}
+				}
 			} else {
 				game.updateLives();
-				System.out.print(value);
 			}
 		}
 	}
 	
+	/**
+	 * Determines if the letter hit the coupon printer or was hit by a coupon.
+	 * @return true if the letter collided with the coupon printer or a coupon and false if otherwise 
+	 */
 	public boolean isHit() {
 		ObservableList<Node> coupons = root.getChildren();
 		Iterator<Node> iter = coupons.iterator();
 		while (iter.hasNext()) {
-			Object coupon = iter.next();
-			if (coupon instanceof Rectangle) {
-				if (letter.intersects(((Rectangle)coupon).getX(), ((Rectangle)coupon).getY(), ((Rectangle)coupon).getWidth(), ((Rectangle)coupon).getHeight())) {
+			Node coupon = iter.next();
+			if ((coupon instanceof Rectangle) && letter.intersects(coupon.getBoundsInLocal())) { // the letter hit something (either coupon, printer, or screen)
+				if (coupon.equals(game.getCouponPrinterBoundary())) { // the letter hit the printer's boundary
 					disappear();
-					((Rectangle)coupon).setY(-1);
 					return true;
 				}
-			}
+				if (((Rectangle)coupon).getFill().equals(Color.WHITE)) { // the letter hit a coupon
+					disappear();
+					((Rectangle)coupon).setY(-1); // hide the coupon by placing it below the screen
+					game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(coupon));
+					return true;
+				} 
+			} 
 		}
 		return false;
 	}
 	
+	/**
+	 * Removes the letter from the game, which occurs when it reaches the bottom of the screen or hits
+	 * either the coupon printer or is hit by a coupon.
+	 */
 	public void disappear() {
-		letter.setY(Main.SCREEN_HEIGHT);
+		letter.setY(Main.SCREEN_HEIGHT + 50);
 		game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(letter));
 	}
 	
+	/**
+	 * Displays the letter in the top right corner of the screen to indicate to the user that a 
+	 * correct letter was hit. This method is only called when the user hits the appropriate letter
+	 * (either a letter in the answer in level 1, or the next letter in the answer in level 2).
+	 */
 	public void display() {
 		int display_x_pos = calculateX(value);
 		Text food_text = new Text(display_x_pos, Game.TEXT_Y/2, Character.toString(value));
@@ -96,16 +146,33 @@ public class Letter {
 		root.getChildren().add(food_text);
 	}
 	
+	/**
+	 * Calculates the x position of the letter to be displayed based on the length of the answer and
+	 * the letter's position (index) in the answer (the letter should be positioned further left if it
+	 * comes earlier in the answer and further right if it comes later in the answer).
+	 * @param current_letter - the letter to be displayed
+	 * @return the x position where the letter is to be displayed
+	 */
 	public int calculateX(char current_letter) {
 		int food_length = current_food.length();
 		int position = current_food.indexOf(current_letter);
 		return Main.SCREEN_WIDTH-(food_length+1)*LETTER_WIDTH + position*LETTER_WIDTH;
 	}
 	
+	/*****GETTERS*****/
+	
+	/**
+	 * This method accesses the value of the letter (one of the 26 letters of the alphabet).
+	 * @return the letter as a character
+	 */
 	public char getValue() {
 		return value;
 	}
 	
+	/**
+	 * This method accesses the letter's ImageView object.
+	 * @return the ImageView object
+	 */
 	public ImageView getLetter() {
 		return letter;
 	}

@@ -14,7 +14,7 @@ of codes into the restaurant's machine, the Couponator. You must know and spell 
 to receive your $100 worth of food (that isn't necessarily all being spent on dinner in one night).
 
 This game falls under the genre Top Down Scrolling Shooter. In a level, the user is given a series of 
-codes (words) to spell out. In order to spell out these words, the user controls a coupon printer that 
+food questions to answer. In order to spell out these answers, the user controls a coupon printer that 
 shoots out coupons while letters fall down the screen (similar to a gun shooting out bullets). The user 
 controls the coupon printer by moving it left and right using the left and right arrow keys. By moving 
 the printer, the user can aim at letters (which will be falling from different places along the top of 
