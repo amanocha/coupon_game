@@ -32,7 +32,6 @@ public class Letter {
 	private ImageView letter;
 	private int x_position;
 	private int y_position;
-	private String current_food;
 	
 	/*****CONSTRUCTORS*****/
 	
@@ -52,7 +51,6 @@ public class Letter {
 		letter = new ImageView();
 		x_position = x;
 		y_position = y;
-		current_food = new_game.getCurrentFood().getAnswer();
 	}
 
 	/**
@@ -81,11 +79,11 @@ public class Letter {
 			disappear();
 		}
 		if (isHit()) {
-			if (current_food.contains(Character.toString(value))) {
+			if (game.getCurrentFood().getAnswer().contains(Character.toString(value))) {
 				if (game.getLevel() == 1) {
 					game.addLetter(this);
 				} else {
-					if (value == current_food.charAt(game.getFoodIndex())) {
+					if (value == game.getCurrentFood().getAnswer().charAt(game.getFoodIndex())) {
 						game.addLetter(this);
 					} else {
 						game.updateLives();
@@ -125,8 +123,10 @@ public class Letter {
 	 * either the coupon printer or is hit by a coupon.
 	 */
 	public void disappear() {
-		letter.setY(Main.SCREEN_HEIGHT + 50);
-		game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(letter));
+		letter.setY(letter.getY() + Main.SCREEN_HEIGHT);
+		game.getGameLetters().remove(this);
+		root.getChildren().remove(letter);
+		//game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(letter));
 	}
 	
 	/**
@@ -150,8 +150,8 @@ public class Letter {
 	 * @return the x position where the letter is to be displayed
 	 */
 	public int calculateX(char current_letter) {
-		int food_length = current_food.length();
-		int position = current_food.indexOf(current_letter);
+		int food_length = game.getCurrentFood().getAnswer().length();
+		int position = game.getCurrentFood().getAnswer().indexOf(current_letter);
 		return Main.SCREEN_WIDTH-(food_length+1)*LETTER_WIDTH + position*LETTER_WIDTH;
 	}
 	

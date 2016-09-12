@@ -56,6 +56,7 @@ public class Game {
 	private int num_foods;
 	private Text food_text;
 	private ArrayList<String> letters;
+	private ArrayList<Letter> game_letters;
 	private Button playGame;
 	private Rectangle button_screen;
 	private Text title_text;
@@ -87,6 +88,7 @@ public class Game {
 		num_foods = 0;
 		food_text = new Text();
 		letters = new ArrayList<String>(); // the letters left in the answer for the user to hit
+		game_letters = new ArrayList<Letter>(); 
 		playGame = new Button("Play");
 		button_screen = new Rectangle(0, 0, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
 		title_text = new Text();
@@ -223,7 +225,9 @@ public class Game {
 	 * @param food - the name of the food that was just guess ("" if new game) in order to avoid repeats
 	 */
 	public void newFood(String food) {
-		root.getChildren().remove(food_text); // to avoid overlapping text
+		root.getChildren().clear();
+		game_letters.clear();
+		letters.clear();
 		
 		createCouponPrinter();
 		displayLives();
@@ -308,6 +312,8 @@ public class Game {
 		if (good_letter == 0) {
 			int random_index = random_generator.nextInt(letters.size());
 			letter = letters.get(random_index).charAt(0);
+		} else if (good_letter == 1 && level == 2){
+			letter = current_food.getAnswer().charAt(food_index);
 		} else {
 			letter = (char) (random_generator.nextInt(26)+97); //convert ASCII code
 		}
@@ -317,7 +323,8 @@ public class Game {
 		
 		Letter new_letter = new Letter(this, letter, x_position, y_position);
 		root.getChildren().add(new_letter.drawLetter());
-		addKeyFrame(Main.MILLISECOND_DELAY, () -> new_letter.fall(Main.SECOND_DELAY));
+		game_letters.add(new_letter);
+		//addKeyFrame(Main.MILLISECOND_DELAY, () -> new_letter.fall(Main.SECOND_DELAY));
 	}
 	
 	/**
@@ -358,7 +365,6 @@ public class Game {
 			if (letters.size() == 0) { // no more letters left to hit in the answer, new food
 				num_foods++;
 				food_index = 0;
-				root.getChildren().clear();
 				newFood(current_food.getAnswer());
 			}
 		}
@@ -461,6 +467,9 @@ public class Game {
 				if (frame % (2*Main.FRAMES_PER_SECOND) == 1) {
 					createLetter();
 				}
+				for(int i = 0; i < game_letters.size(); i++) {
+					game_letters.get(i).fall(Main.SECOND_DELAY);
+				}
 			}
 			frame++;
 		}
@@ -509,5 +518,13 @@ public class Game {
 	 */
 	public int getLevel() {
 		return level;
+	}
+	
+	/**
+	 * This method accesses the array of letters that are currently in the game.
+	 * @return the array of letters 
+	 */
+	public ArrayList<Letter> getGameLetters() {
+		return game_letters;
 	}
 }
