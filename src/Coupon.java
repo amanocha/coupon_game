@@ -14,6 +14,7 @@ public class Coupon {
 	public static final int HEIGHT = 10;
 	private static final int COUPON_SPEED = 500;
 	
+	private Game game;
 	private Group root;
 	private Rectangle coupon;
 	
@@ -24,7 +25,8 @@ public class Coupon {
 	 * added to the screen through accessing the root node.
 	 * @param new_root - the root node of the game
 	 */
-	public Coupon(Group new_root) {
+	public Coupon(Game new_game, Group new_root) {
+		game = new_game;
 		coupon = new Rectangle();
 		root = new_root;
 	}
@@ -51,7 +53,7 @@ public class Coupon {
 	 */
 	public void travel(double time_step) {
 		coupon.setY(coupon.getY() - COUPON_SPEED*time_step);
-		if (coupon.getY() <= Game.TEXT_Y + 5) {
+		if (coupon.getY() <= Screen.TEXT_Y + 5) {
 			disappear();
 		}
 	}
@@ -60,6 +62,7 @@ public class Coupon {
 	 * Removes the coupon from the game, which occurs when the coupons reach the top of the screen.
 	 */
 	public void disappear() {
+		game.getGameCoupons().remove(this);
 		root.getChildren().remove(coupon);
 	}
 }

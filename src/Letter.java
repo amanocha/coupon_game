@@ -110,7 +110,8 @@ public class Letter {
 				if (((Rectangle)coupon).getFill().equals(Color.WHITE)) { // the letter hit a coupon
 					disappear();
 					((Rectangle)coupon).setY(-1); // hide the coupon by placing it below the screen
-					game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(coupon));
+					game.getGameCoupons().remove(coupon);
+					root.getChildren().remove(coupon);
 					return true;
 				} 
 			} 
@@ -126,7 +127,6 @@ public class Letter {
 		letter.setY(letter.getY() + Main.SCREEN_HEIGHT);
 		game.getGameLetters().remove(this);
 		root.getChildren().remove(letter);
-		//game.addKeyFrame(Main.MILLISECOND_DELAY, () -> root.getChildren().remove(letter));
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class Letter {
 	 */
 	public void display() {
 		int display_x_pos = calculateX(value);
-		Text food_text = new Text(display_x_pos, Game.TEXT_Y/2, Character.toString(value));
+		Text food_text = new Text(display_x_pos, Screen.TEXT_Y/2, Character.toString(value));
 		food_text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		food_text.setFill(Color.WHITE);
 		root.getChildren().add(food_text);

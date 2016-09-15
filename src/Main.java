@@ -26,18 +26,22 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage stage) {
+		// Set up scene
 		Group root = new Group();
 		Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT, Color.BLACK);
 		
+		// Set up and run game
 		Timeline animation = new Timeline();
 	    Game new_game = new Game(root, scene, animation);
 	    new_game.init();
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> new_game.play());
 		
+		// Set up stage
 		stage.setTitle("Cracking the Couponator");
 		stage.setScene(scene);
 		stage.show();
 		
+		// Run game loop
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.getKeyFrames().add(frame);
 		animation.play();
